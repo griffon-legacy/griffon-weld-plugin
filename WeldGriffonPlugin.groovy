@@ -19,30 +19,68 @@
  */
 class WeldGriffonPlugin {
     // the plugin version
-    def version = "0.2"
+    String version = '0.3'
     // the version or versions of Griffon the plugin is designed for
-    def griffonVersion = '0.9.3 > *' 
+    String griffonVersion = '0.9.5 > *'
     // the other plugins this plugin depends on
-    def dependsOn = [:]
+    Map dependsOn = [:]
     // resources that are included in plugin packaging
-    def pluginIncludes = []
+    List pluginIncludes = []
     // the plugin license
-    def license = 'Apache Software License 2.0'
+    String license = 'Apache Software License 2.0'
     // Toolkit compatibility. No value means compatible with all
     // Valid values are: swing, javafx, swt, pivot, gtk
-    def toolkits = []
+    List toolkits = []
     // Platform compatibility. No value means compatible with all
     // Valid values are:
     // linux, linux64, windows, windows64, macosx, macosx64, solaris
-    def platforms = []
+    List platforms = []
+    // URL where documentation can be found
+    String documentation = ''
+    // URL where source can be found
+    String source = 'https://github.com/griffon/griffon-weld-plugin'
 
-    def author = 'Andres Almiray'
-    def authorEmail = 'aalmiray@users.sourceforge.net'
-    def title = 'CDI support via Weld'
-    def description = '''
-CDI support via Weld
+    List authors = [
+        [
+            name: 'Andres Almiray',
+            email: 'aalmiray@yahoo.com'
+        ]
+    ]
+    String title = 'CDI via JBoss Weld'
+    // accepts Markdown syntax. See http://daringfireball.net/projects/markdown/ for details
+    String description = '''
+Enables the usage of [Weld][1] as Dependency Injection provider, and much more!
+
+Usage
+-----
+
+Weld will automatically autowire all dependencies marked with `@javax.inject.Inject`. The plugin also allows you to define
+additional beans, interceptors and alternatives in the standard `beans.xml` file located in `griffon-app/conf/metainf`.
+
+Every instance created using the framework's facilities (in other words, those those that trigger a 'NewInstance' event) will
+also participate in the benefits of Weld managed injections. This means you annotate controller, models, and pretty much any
+artifact supported by Griffon.
+
+There are two properties added to the application instance
+
+ * **weld** - of type `org.jboss.weld.environment.se.Weld`
+ * **weldContainer** - of type `org.jboss.weld.environment.se.WeldContainer`
+
+Addons can inject beans during startup. The Weld addon published an event named "BeforeWeld" that can be used to define a set
+of beans to be added to the BeanManager. Here's how the [DataSource plugin][2] does it to inject the default datasource
+
+        def events = [
+            BeforeWeld: { Map beans ->
+                beans.dataSource = DataSourceHolder.instance.getDataSource('default')
+            }
+        ]
+
+### Example
+
+A trivial sample application can be found at [https://github.com/aalmiray/griffon_sample_apps/tree/master/demos/numberguess][3]
+
+[1]: http://seamframework.org/Weld
+[2]: /plugin/datasource
+[3]: https://github.com/aalmiray/griffon_sample_apps/tree/master/demos/numberguess
 '''
-
-    // URL to the plugin's documentation
-    def documentation = 'http://griffon.codehaus.org/Weld+Plugin'
 }
