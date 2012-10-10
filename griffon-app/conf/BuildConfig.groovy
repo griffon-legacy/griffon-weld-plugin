@@ -7,7 +7,7 @@ griffon.project.dependency.resolution = {
         mavenRepo 'http://repository.jboss.org/nexus/content/groups/public'
     }
     dependencies {
-        compile('org.jboss.weld.se:weld-se-core:1.1.5.Final') {
+        compile('org.jboss.weld.se:weld-se-core:1.1.9.Final') {
             excludes 'junit', 'slf4j-simple', 'slf4j-ext'
         }
         compile 'org.slf4j:slf4j-ext:1.6.4'

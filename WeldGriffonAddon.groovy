@@ -28,14 +28,14 @@ import static griffon.plugins.weld.GriffonExtension.registerBean
  * @author Andres Almiray
  */
 class WeldGriffonAddon {
-    def events = [
+    Map events = [
         LoadAddonsEnd: { app, addons ->
             Map<String, Object> beans = [:]
             app.event('BeforeWeld', [beans])
             for(entry in beans.entrySet()) {
                 registerBean(entry.key, entry.value)
             }
-            
+
             WeldHolder.weld = new Weld()
             WeldContainerHolder.weldContainer = WeldHolder.weld.initialize()
 
@@ -44,10 +44,9 @@ class WeldGriffonAddon {
             WeldContainerHolder.weldContainer.event().select(ContainerInitialized).fire(new ContainerInitialized())
         },
         NewInstance: { klass, type, instance ->
-            NonContextual.of(klass, WeldContainerHolder.weldContainer.beanManager).existingInstance(instance).with {
-                inject()
-                postConstruct()
-            }
+            NonContextual.Instance nci = NonContextual.of(klass, WeldContainerHolder.weldContainer.beanManager).existingInstance(instance)
+            nci.inject()
+            nci.postConstruct()
         },
         ShutdownStart: { app ->
             WeldHolder.weld?.shutdown()
